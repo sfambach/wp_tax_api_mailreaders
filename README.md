@@ -2,21 +2,22 @@
 
 Mail readers for the [Taxonomy Modeller](https://github.com/sfambach/wp-taxonomy-modeler) (WordPress plugin), in one module.
 
-**Status 0.1.0 (needs modeller 0.1.143 and [Taxmod Mail](https://github.com/sfambach/wp_tax_mail) 0.6.0 or later):
-reads the mails of AliExpress, Amazon, Conrad, Reichelt, Hermes and PayPal from the mailbox of Taxmod Mail and hands
+**Status 0.2.0 (needs modeller 0.1.143 and [Taxmod Mail](https://github.com/sfambach/wp_tax_mail) 0.6.0 or later):
+reads the mails of AliExpress, Conrad, Reichelt, Hermes and PayPal from the mailbox of Taxmod Mail and hands
 them to the modeller's inbox.** Each reader keeps its own tab under *Taxonomy Modeller → Configuration*, with the same
 key as before.
 
 These six readers were separate plugins (`wp_tax_api_aliexpress`, `_amazon`, `_conrad`, `_reichelt`, `_hermes`,
 `_paypal`) until 0.1.0. They are joined because every active plugin costs start-up time on each uncached page view, and
 these six read mails only and have no settings of their own. Connections with an API or settings of their own (eBay,
-DHL, GLS, JLCPCB, Mouser, DPD) stay modules of their own
+DHL, GLS, JLCPCB, Mouser, DPD) stay modules of their own. **Amazon left again in 0.2.0**: with the order export it has
+settings of its own, so its mail reader lives only in [Taxmod Amazon](https://github.com/sfambach/wp_tax_api_amazon) —
+two readers of one shop registered the same mails twice
 ([concept](https://github.com/sfambach/wp-taxonomy-modeler/blob/main/docs/pakete/import/module-schnitt.md)).
 
 | Reader | Reads | Notes |
 |---|---|---|
 | AliExpress | order and shipping mails | a shipping mail carries no order date |
-| Amazon | order mails | no tracking number, no shipping cost |
 | Conrad | order mails and invoices | the invoice PDF goes to the modeller's encrypted document store |
 | Reichelt | order mails | Reichelt has no API |
 | Hermes | parcel notices | goes to the order with the same tracking number, never creates one |
@@ -25,7 +26,7 @@ DHL, GLS, JLCPCB, Mouser, DPD) stay modules of their own
 ## Setup
 
 1. Install and set up Taxmod Mail (mailbox access).
-2. Activate this module and deactivate the six old single modules (they register the same readers twice otherwise).
+2. Activate this module and deactivate the old single modules AliExpress, Conrad, Reichelt, Hermes and PayPal (they register the same readers twice otherwise).
 
 ## Development
 

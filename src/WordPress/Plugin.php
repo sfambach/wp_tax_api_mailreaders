@@ -3,7 +3,6 @@
 namespace TaxApiMailReaders\WordPress;
 
 use TaxApiMailReaders\Core\AliExpress\AliExpressMailParser;
-use TaxApiMailReaders\Core\Amazon\AmazonMailParser;
 use TaxApiMailReaders\Core\Conrad\ConradMailParser;
 use TaxApiMailReaders\Core\Hermes\HermesNoticeMailParser;
 use TaxApiMailReaders\Core\Paypal\PaypalMailParser;
@@ -19,7 +18,7 @@ use Taxmod\WordPress\Import\Documents;
  */
 final class Plugin
 {
-    public const VERSION = '0.1.0';
+    public const VERSION = '0.2.0';
 
     public static function boot(): void
     {
@@ -63,7 +62,6 @@ final class Plugin
     {
         return [
             'aliexpress' => ['title' => 'AliExpress', 'reader' => new AliExpressMailParser(self::VERSION), 'guide' => self::aliexpressGuide(...)],
-            'amazon'     => ['title' => 'Amazon', 'reader' => new AmazonMailParser(self::VERSION), 'guide' => self::amazonGuide(...)],
             // Invoice PDFs go to the modeller's encrypted document store (D-1023); without it only the facts are kept.
             'conrad'     => ['title' => 'Conrad', 'reader' => new ConradMailParser(self::VERSION, class_exists(Documents::class) ? Documents::put(...) : null), 'guide' => self::conradGuide(...)],
             'reichelt'   => ['title' => 'Reichelt', 'reader' => new ReicheltMailParser(self::VERSION), 'guide' => self::reicheltGuide(...)],
@@ -96,13 +94,6 @@ final class Plugin
         return '<ol><li>' . esc_html__('Let AliExpress send its order mails to the mailbox of Taxmod Mail (or forward them there).', 'taxapimailreaders') . '</li><li>'
             . esc_html__('Keep this module active: Taxmod Mail hands every AliExpress mail to it, and the proposals appear in the Inbox.', 'taxapimailreaders') . '</li></ol><p>'
             . esc_html__('A shipping mail carries no order date.', 'taxapimailreaders') . '</p>';
-    }
-
-    public static function amazonGuide(): string
-    {
-        return '<ol><li>' . esc_html__('Let Amazon send its order mails to the mailbox of Taxmod Mail (or forward them there).', 'taxapimailreaders') . '</li><li>'
-            . esc_html__('Keep this module active: Taxmod Mail hands every Amazon mail to it, and the proposals appear in the Inbox.', 'taxapimailreaders') . '</li></ol><p>'
-            . esc_html__('The mails name no tracking number and no shipping cost. The order history from before the mails is uploaded in the Mail module for now.', 'taxapimailreaders') . '</p>';
     }
 
     public static function conradGuide(): string

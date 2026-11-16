@@ -2,8 +2,8 @@
 
 /**
  * Plugin Name:       Taxmod Mail Readers
- * Description:       Reads the mails of AliExpress, Amazon, Conrad, Reichelt, Hermes and PayPal from the mailbox of Taxmod Mail and hands them to the inbox of the Taxonomy Modeller.
- * Version:           0.1.0
+ * Description:       Reads the mails of AliExpress, Conrad, Reichelt, Hermes and PayPal from the mailbox of Taxmod Mail and hands them to the inbox of the Taxonomy Modeller.
+ * Version:           0.2.0
  * Requires at least: 6.9
  * Requires PHP:      8.2
  * Author:            Stefan Fambach (SteFam), Claude (Anthropic AI)
