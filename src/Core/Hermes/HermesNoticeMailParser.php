@@ -3,7 +3,7 @@
 namespace TaxApiMailReaders\Core\Hermes;
 
 use Taxmod\Core\Import\Mail\MailMessage;
-use Taxmod\Core\Import\Mail\OrderMailParser;
+use Taxmod\Core\Import\Mail\ParcelNoticeMailParser;
 use Taxmod\Core\Import\OrderProposal;
 use Taxmod\Core\Import\ProposalKind;
 
@@ -14,63 +14,26 @@ use Taxmod\Core\Import\ProposalKind;
  *
  * @see https://github.com/sfambach/wp-taxonomy-modeler/blob/main/docs/pakete/import/module-schnitt.md
  */
-final class HermesNoticeMailParser implements OrderMailParser
+final class HermesNoticeMailParser extends ParcelNoticeMailParser
 {
     private const DOMAINS = ['myhermes.de', 'hermesworld.com', 'hermes-europe.de'];
 
-    public function __construct(private readonly string $version)
+    public function __construct(string $version)
     {
+        parent::__construct('hermes', 'Hermes', self::DOMAINS, $version);
     }
 
-    public function key(): string
+    /** An announcement «unterwegs» names the day, the time window and the shipper (D-1131). */
+    protected function notice(MailMessage $mail, ProposalKind $kind, string $number): OrderProposal
     {
-        return 'hermes';
-    }
-
-    public function shopName(): string
-    {
-        return 'Hermes';
-    }
-
-    public function recognises(MailMessage $mail): bool
-    {
-        $domain = $mail->senderDomain();
-
-        return array_filter(self::DOMAINS, static fn (string $hermes): bool => $domain === $hermes || str_ends_with($domain, '.' . $hermes)) !== [];
-    }
-
-    public function parse(MailMessage $mail): OrderProposal
-    {
-        $number = $this->trackingNumber($mail);
-        $kind = $this->kind($mail);
-
-        if ($kind === ProposalKind::NoReceipt || $number === null) {
-            return new OrderProposal($this->shopName(), '', ProposalKind::NoReceipt);
-        }
-
         if ($kind !== ProposalKind::Shipped) {
-            return new OrderProposal($this->shopName(), 'sendung:' . $number, $kind, trackingNumbers: [$number], numberMissing: true);
+            return parent::notice($mail, $kind, $number);
         }
 
         [$day, $hours] = $this->announcedDelivery($mail);
-        // ⚠️ *A modeller before 0.1.143 knows no announcement (D-1131) and would refuse the named arguments; it gets the
-        // notice without them.*
-        $announced = property_exists(OrderProposal::class, 'shipper')
-            ? ['expectedDelivery' => $day, 'deliveryWindow' => $hours, 'shipper' => $this->shipper($mail)]
-            : [];
 
-        return new OrderProposal(...['platform' => $this->shopName(), 'orderNumber' => 'sendung:' . $number, 'kind' => $kind,
-            'trackingNumbers' => [$number], 'numberMissing' => true, ...$announced]);
-    }
-
-    public function kinds(): array
-    {
-        return [ProposalKind::Shipped, ProposalKind::Delivered];
-    }
-
-    public function version(): string
-    {
-        return $this->version;
+        return new OrderProposal($this->shopName(), 'sendung:' . $number, $kind, trackingNumbers: [$number], numberMissing: true,
+            expectedDelivery: $day, deliveryWindow: $hours, shipper: $this->shipper($mail));
     }
 
     /**
@@ -79,7 +42,7 @@ final class HermesNoticeMailParser implements OrderMailParser
      * mails (2021–2026), four «auf dem Weg» read as delivered before. A delay («Wichtige Information zur Zustellung»)
      * and a parcel waiting in a PaketShop are still on the way.*
      */
-    private function kind(MailMessage $mail): ProposalKind
+    protected function kind(MailMessage $mail): ProposalKind
     {
         $said = mb_strtolower($mail->subject . ' ' . ($mail->lines()[0] ?? ''));
         $forecast = preg_match('/voraussichtlich|erst am|kommt leider/u', $said) === 1;
@@ -149,7 +112,7 @@ final class HermesNoticeMailParser implements OrderMailParser
     }
 
     /** «Sendungsnummer H1033…» on one line, or the number on the next; the tracking link carries it after «#». */
-    private function trackingNumber(MailMessage $mail): ?string
+    protected function parcelNumber(MailMessage $mail): ?string
     {
         $lines = $mail->lines();
 

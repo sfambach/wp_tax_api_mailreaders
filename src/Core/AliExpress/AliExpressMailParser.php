@@ -4,7 +4,7 @@ namespace TaxApiMailReaders\Core\AliExpress;
 
 use Taxmod\Core\Import\Mail\MailMessage;
 use Taxmod\Core\Import\Mail\LineCollector;
-use Taxmod\Core\Import\Mail\OrderMailParser;
+use Taxmod\Core\Import\Mail\ShopMailParser;
 use Taxmod\Core\Import\Mail\Text;
 use Taxmod\Core\Import\OrderProposal;
 use Taxmod\Core\Import\ProposalKind;
@@ -17,20 +17,12 @@ use Taxmod\Core\Import\ProposalKind;
  *
  * @see https://github.com/sfambach/wp-taxonomy-modeler/blob/main/docs/pakete/import/module-schnitt.md
  */
-final class AliExpressMailParser implements OrderMailParser
+final class AliExpressMailParser extends ShopMailParser
 {
-    public function __construct(private readonly string $version)
-    {
-    }
 
-    public function key(): string
+    public function __construct(string $version)
     {
-        return 'aliexpress';
-    }
-
-    public function shopName(): string
-    {
-        return 'AliExpress';
+        parent::__construct('aliexpress', 'AliExpress', [ProposalKind::Ordered, ProposalKind::Shipped, ProposalKind::Delivered], [], $version);
     }
 
     public function recognises(MailMessage $mail): bool
@@ -154,13 +146,4 @@ final class AliExpressMailParser implements OrderMailParser
         return $found;
     }
 
-    public function kinds(): array
-    {
-        return [ProposalKind::Ordered, ProposalKind::Shipped, ProposalKind::Delivered];
-    }
-
-    public function version(): string
-    {
-        return $this->version;
-    }
 }

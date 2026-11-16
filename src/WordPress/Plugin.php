@@ -8,6 +8,7 @@ use TaxApiMailReaders\Core\Hermes\HermesNoticeMailParser;
 use TaxApiMailReaders\Core\Paypal\PaypalMailParser;
 use TaxApiMailReaders\Core\Reichelt\ReicheltMailParser;
 use Taxmod\Core\Import\Mail\OrderMailParser;
+use Taxmod\Core\Import\Mail\ShopMailParser;
 use Taxmod\WordPress\Import\Documents;
 
 /**
@@ -18,7 +19,7 @@ use Taxmod\WordPress\Import\Documents;
  */
 final class Plugin
 {
-    public const VERSION = '0.2.0';
+    public const VERSION = '0.2.1';
 
     public static function boot(): void
     {
@@ -26,9 +27,9 @@ final class Plugin
             load_plugin_textdomain('taxapimailreaders', false, dirname(plugin_basename(dirname(__DIR__, 2) . '/wp-tax-api-mailreaders.php')) . '/languages');
 
             // The contract lives in the modeller; without it there is nothing to register with.
-            if (! interface_exists(OrderMailParser::class)) {
+            if (! class_exists(ShopMailParser::class)) {
                 add_action('admin_notices', static fn () => print '<div class="notice notice-warning"><p><strong>Taxmod Mail Readers:</strong> '
-                    . esc_html__('needs the Taxonomy Modeller 0.1.143 or later and Taxmod Mail 0.6.0 or later.', 'taxapimailreaders') . '</p></div>');
+                    . esc_html__('needs the Taxonomy Modeller 0.2.120 or later and Taxmod Mail 0.6.0 or later.', 'taxapimailreaders') . '</p></div>');
 
                 return;
             }

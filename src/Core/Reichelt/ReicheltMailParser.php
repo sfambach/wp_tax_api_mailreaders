@@ -4,7 +4,7 @@ namespace TaxApiMailReaders\Core\Reichelt;
 
 use Taxmod\Core\Import\Mail\MailMessage;
 use Taxmod\Core\Import\Mail\LineCollector;
-use Taxmod\Core\Import\Mail\OrderMailParser;
+use Taxmod\Core\Import\Mail\ShopMailParser;
 use Taxmod\Core\Import\Mail\Text;
 use Taxmod\Core\Import\OrderProposal;
 use Taxmod\Core\Import\ProposalKind;
@@ -15,23 +15,15 @@ use Taxmod\Core\Import\ProposalKind;
  *
  * @see https://github.com/sfambach/wp-taxonomy-modeler/blob/main/docs/pakete/import/module-schnitt.md
  */
-final class ReicheltMailParser implements OrderMailParser
+final class ReicheltMailParser extends ShopMailParser
 {
-    public function __construct(private readonly string $version)
-    {
-    }
 
     private const NUMBER = '/Bearbeitungsnummer I-(\d{6})|Bestellung I-(\d{6})|I-Net-Nummer (\d{6})|I-Net Nummer[^\n]*\n[^\n]*\n(\d{6})/';
     private const MERCHANT = 'reichelt elektronik';
 
-    public function key(): string
+    public function __construct(string $version)
     {
-        return 'reichelt';
-    }
-
-    public function shopName(): string
-    {
-        return 'Reichelt';
+        parent::__construct('reichelt', 'Reichelt', [ProposalKind::Ordered, ProposalKind::Shipped], [], $version);
     }
 
     public function recognises(MailMessage $mail): bool
@@ -126,13 +118,4 @@ final class ReicheltMailParser implements OrderMailParser
             Text::decimal($shipping), Text::decimal($total), self::MERCHANT);
     }
 
-    public function kinds(): array
-    {
-        return [ProposalKind::Ordered, ProposalKind::Shipped];
-    }
-
-    public function version(): string
-    {
-        return $this->version;
-    }
 }

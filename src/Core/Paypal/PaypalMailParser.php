@@ -5,7 +5,7 @@ namespace TaxApiMailReaders\Core\Paypal;
 use Closure;
 use Taxmod\Core\Import\Mail\LineCollector;
 use Taxmod\Core\Import\Mail\MailMessage;
-use Taxmod\Core\Import\Mail\OrderMailParser;
+use Taxmod\Core\Import\Mail\ShopMailParser;
 use Taxmod\Core\Import\Mail\Text;
 use Taxmod\Core\Import\OrderProposal;
 use Taxmod\Core\Import\ProposalKind;
@@ -27,7 +27,7 @@ use Taxmod\Core\Import\ProposalKind;
  *
  * @see https://github.com/sfambach/wp-taxonomy-modeler/blob/main/docs/pakete/import/module-schnitt.md
  */
-final class PaypalMailParser implements OrderMailParser
+final class PaypalMailParser extends ShopMailParser
 {
     public const PLATFORM = 'PayPal';
 
@@ -39,18 +39,9 @@ final class PaypalMailParser implements OrderMailParser
      * @param Closure(): list<string> $otherShops names of the shops other modules read — asked at parse time, because
      *        modules register in any order
      */
-    public function __construct(private readonly string $version, private readonly Closure $otherShops)
+    public function __construct(string $version, private readonly Closure $otherShops)
     {
-    }
-
-    public function key(): string
-    {
-        return 'paypal';
-    }
-
-    public function shopName(): string
-    {
-        return self::PLATFORM;
+        parent::__construct('paypal', self::PLATFORM, [ProposalKind::Ordered, ProposalKind::Refunded], [], $version);
     }
 
     public function recognises(MailMessage $mail): bool
@@ -90,16 +81,6 @@ final class PaypalMailParser implements OrderMailParser
             source: 'mail',
             externalId: $mail->messageId !== '' ? $mail->messageId : null,
         );
-    }
-
-    public function kinds(): array
-    {
-        return [ProposalKind::Ordered, ProposalKind::Refunded];
-    }
-
-    public function version(): string
-    {
-        return $this->version;
     }
 
     /** Null: not a payment of his — money he received, security notices, advertising. */

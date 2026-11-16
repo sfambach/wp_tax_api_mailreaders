@@ -4,7 +4,7 @@ namespace TaxApiMailReaders\Core\Conrad;
 
 use Taxmod\Core\Import\Mail\MailMessage;
 use Taxmod\Core\Import\Mail\LineCollector;
-use Taxmod\Core\Import\Mail\OrderMailParser;
+use Taxmod\Core\Import\Mail\ShopMailParser;
 use Taxmod\Core\Import\Mail\Text;
 use Taxmod\Core\Import\InvoiceFacts;
 use Taxmod\Core\Import\OrderProposal;
@@ -17,23 +17,15 @@ use Taxmod\Core\Import\ProposalKind;
  *
  * @see https://github.com/sfambach/wp-taxonomy-modeler/blob/main/docs/pakete/import/module-schnitt.md
  */
-final class ConradMailParser implements OrderMailParser
+final class ConradMailParser extends ShopMailParser
 {
     /** @param (\Closure(string, string, string): string)|null $keepDocument stores a PDF and returns its `vault:<key>` */
-    public function __construct(private readonly string $version, private readonly ?\Closure $keepDocument = null)
-    {
-    }
 
     private const MERCHANT = 'Conrad Electronic';
 
-    public function key(): string
+    public function __construct(string $version, private readonly ?\Closure $keepDocument = null)
     {
-        return 'conrad';
-    }
-
-    public function shopName(): string
-    {
-        return 'Conrad';
+        parent::__construct('conrad', 'Conrad', [ProposalKind::Ordered, ProposalKind::Shipped, ProposalKind::Delivered, ProposalKind::Invoice], [], $version);
     }
 
     public function recognises(MailMessage $mail): bool
@@ -117,13 +109,4 @@ final class ConradMailParser implements OrderMailParser
         return null;
     }
 
-    public function kinds(): array
-    {
-        return [ProposalKind::Ordered, ProposalKind::Shipped, ProposalKind::Delivered, ProposalKind::Invoice];
-    }
-
-    public function version(): string
-    {
-        return $this->version;
-    }
 }

@@ -2,7 +2,7 @@
 
 Mail readers for the [Taxonomy Modeller](https://github.com/sfambach/wp-taxonomy-modeler) (WordPress plugin), in one module.
 
-**Status 0.2.0 (needs modeller 0.1.143 and [Taxmod Mail](https://github.com/sfambach/wp_tax_mail) 0.6.0 or later):
+**Status 0.2.1 (needs modeller 0.2.120 and [Taxmod Mail](https://github.com/sfambach/wp_tax_mail) 0.6.0 or later):
 reads the mails of AliExpress, Conrad, Reichelt, Hermes and PayPal from the mailbox of Taxmod Mail and hands
 them to the modeller's inbox.** Each reader keeps its own tab under *Taxonomy Modeller → Configuration*, with the same
 key as before.
