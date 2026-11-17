@@ -1,6 +1,6 @@
 {
     "name": "sfambach/wp-tax-api-mailreaders",
-    "description": "Taxmod Mail Readers — reads the mails of AliExpress, Conrad, Reichelt, Hermes and PayPal for the Taxonomy Modeller.",
+    "description": "Taxmod Mail Readers — reads the mails of AliExpress, Conrad, Reichelt, LCSC, Hermes and PayPal for the Taxonomy Modeller.",
     "type": "wordpress-plugin",
     "license": "proprietary",
     "require": {

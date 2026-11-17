@@ -2,8 +2,8 @@
 
 Mail readers for the [Taxonomy Modeller](https://github.com/sfambach/wp-taxonomy-modeler) (WordPress plugin), in one module.
 
-**Status 0.2.1 (needs modeller 0.2.120 and [Taxmod Mail](https://github.com/sfambach/wp_tax_mail) 0.6.0 or later):
-reads the mails of AliExpress, Conrad, Reichelt, Hermes and PayPal from the mailbox of Taxmod Mail and hands
+**Status 0.3.0 (needs modeller 0.2.120 and [Taxmod Mail](https://github.com/sfambach/wp_tax_mail) 0.6.0 or later):
+reads the mails of AliExpress, Conrad, Reichelt, LCSC, Hermes and PayPal from the mailbox of Taxmod Mail and hands
 them to the modeller's inbox.** Each reader keeps its own tab under *Taxonomy Modeller → Configuration*, with the same
 key as before.
 
@@ -20,6 +20,7 @@ two readers of one shop registered the same mails twice
 | AliExpress | order and shipping mails | a shipping mail carries no order date |
 | Conrad | order mails and invoices | the invoice PDF goes to the modeller's encrypted document store |
 | Reichelt | order mails | Reichelt has no API |
+| LCSC | order confirmation and shipping mails | the items come from the packing list PDF of the shipping mail; no prices |
 | Hermes | parcel notices | goes to the order with the same tracking number, never creates one |
 | PayPal | payment receipts | a payment to a shop with a reader of its own is left to that reader |
 

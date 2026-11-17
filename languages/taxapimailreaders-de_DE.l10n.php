@@ -1,6 +1,10 @@
 <?php
 // German translation of Taxmod Mail Readers (WordPress .l10n.php format, WP 6.5+).
 return ['domain' => 'taxapimailreaders', 'language' => 'de_DE', 'messages' => [
+    'needs the Taxonomy Modeller 0.2.120 or later and Taxmod Mail 0.6.0 or later.' => 'braucht den Taxonomy Modeller 0.2.120 und Taxmod Mail 0.6.0 oder neuer.',
+    'Let LCSC send its order mails to the mailbox of Taxmod Mail (or forward them there).' => 'LCSC die Bestellmails an das Postfach von Taxmod Mail schicken lassen (oder dorthin weiterleiten).',
+    'Keep this module active: Taxmod Mail hands every LCSC mail to it, and the proposals appear in the Inbox.' => 'Dieses Modul aktiv lassen: Taxmod Mail gibt ihm jede LCSC-Mail, die Vorschläge erscheinen in der Inbox.',
+    'The order comes in with the shipping mail: its items are read from the attached packing list. LCSC mails carry no prices.' => 'Die Bestellung kommt mit der Versandmail: Ihre Positionen stehen in der angehängten Packliste. LCSC-Mails nennen keine Preise.',
     'run "composer install" in the plugin folder — the autoloader is missing.' => 'im Plugin-Ordner «composer install» ausführen — der Autoloader fehlt.',
     'needs the Taxonomy Modeller 0.1.143 or later and Taxmod Mail 0.6.0 or later.' => 'braucht den Taxonomy Modeller 0.1.143 und Taxmod Mail 0.6.0 oder neuer.',
     'Let AliExpress send its order mails to the mailbox of Taxmod Mail (or forward them there).' => 'AliExpress die Bestellmails an das Postfach von Taxmod Mail schicken lassen (oder dorthin weiterleiten).',

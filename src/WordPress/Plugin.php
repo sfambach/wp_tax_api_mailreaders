@@ -5,6 +5,7 @@ namespace TaxApiMailReaders\WordPress;
 use TaxApiMailReaders\Core\AliExpress\AliExpressMailParser;
 use TaxApiMailReaders\Core\Conrad\ConradMailParser;
 use TaxApiMailReaders\Core\Hermes\HermesNoticeMailParser;
+use TaxApiMailReaders\Core\Lcsc\LcscMailParser;
 use TaxApiMailReaders\Core\Paypal\PaypalMailParser;
 use TaxApiMailReaders\Core\Reichelt\ReicheltMailParser;
 use Taxmod\Core\Import\Mail\OrderMailParser;
@@ -19,7 +20,7 @@ use Taxmod\WordPress\Import\Documents;
  */
 final class Plugin
 {
-    public const VERSION = '0.2.1';
+    public const VERSION = '0.3.0';
 
     public static function boot(): void
     {
@@ -66,6 +67,7 @@ final class Plugin
             // Invoice PDFs go to the modeller's encrypted document store (D-1023); without it only the facts are kept.
             'conrad'     => ['title' => 'Conrad', 'reader' => new ConradMailParser(self::VERSION, class_exists(Documents::class) ? Documents::put(...) : null), 'guide' => self::conradGuide(...)],
             'reichelt'   => ['title' => 'Reichelt', 'reader' => new ReicheltMailParser(self::VERSION), 'guide' => self::reicheltGuide(...)],
+            'lcsc'       => ['title' => 'LCSC', 'reader' => new LcscMailParser(self::VERSION), 'guide' => self::lcscGuide(...)],
             'hermes'     => ['title' => 'Hermes', 'reader' => new HermesNoticeMailParser(self::VERSION), 'guide' => self::hermesGuide(...)],
             'paypal'     => ['title' => 'PayPal', 'reader' => new PaypalMailParser(self::VERSION, self::shopsBesidesPaypal(...)), 'guide' => self::paypalGuide(...)],
         ];
@@ -109,6 +111,13 @@ final class Plugin
         return '<ol><li>' . esc_html__('Let Reichelt send its order mails to the mailbox of Taxmod Mail (or forward them there).', 'taxapimailreaders') . '</li><li>'
             . esc_html__('Keep this module active: Taxmod Mail hands every Reichelt mail to it, and the proposals appear in the Inbox.', 'taxapimailreaders') . '</li></ol><p>'
             . esc_html__('Reichelt has no API; mails are the only way.', 'taxapimailreaders') . '</p>';
+    }
+
+    public static function lcscGuide(): string
+    {
+        return '<ol><li>' . esc_html__('Let LCSC send its order mails to the mailbox of Taxmod Mail (or forward them there).', 'taxapimailreaders') . '</li><li>'
+            . esc_html__('Keep this module active: Taxmod Mail hands every LCSC mail to it, and the proposals appear in the Inbox.', 'taxapimailreaders') . '</li></ol><p>'
+            . esc_html__('The order comes in with the shipping mail: its items are read from the attached packing list. LCSC mails carry no prices.', 'taxapimailreaders') . '</p>';
     }
 
     public static function hermesGuide(): string
