@@ -37,7 +37,7 @@ final class LcscMailParser extends ShopMailParser
         $ordered = sprintf('20%s-%s-%s', $orders[0][2], $orders[0][3], $orders[0][4]);
 
         if (! str_contains($mail->subject, 'Shipped')) {
-            return new OrderProposal($this->shopName(), $number, ProposalKind::Ordered, $mail->date?->format('Y-m-d') ?? $ordered, counterparty: self::MERCHANT);
+            return new OrderProposal($this->shopName(), $number, ProposalKind::Ordered, $ordered, counterparty: self::MERCHANT);
         }
 
         $tracking = preg_match('/Tracking number:\s*([A-Z0-9]+)/', $text, $found) === 1 ? [$found[1]] : [];
